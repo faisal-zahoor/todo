@@ -7,12 +7,20 @@
 
 <script>
 // @ is an alias to /src
-import TodoList from "@/components/TodoList.vue";
+import { getAuth } from 'firebase/auth'
+
+import TodoList from '@/components/TodoList.vue'
 
 export default {
-  name: "Home",
+  name: 'Home',
   components: {
     TodoList,
   },
-};
+  created() {
+    const auth = getAuth()
+    if (!auth.currentUser) {
+      this.$router.push({ name: 'Auth' })
+    }
+  },
+}
 </script>
