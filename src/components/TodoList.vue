@@ -36,10 +36,10 @@
         </div>
       </div>
       <hr class="mb-5" />
-      <div>
+      <div v-for="row in todo_list" :key="row.id">
         <div class="flex mb-4 items-center">
           <p class="w-full text-grey-darkest">
-            Add another component to Tailwind Components
+            {{ row.data.title }}
           </p>
           <button
             class="
@@ -80,15 +80,44 @@
 
 <script>
 import firbase from '../firebase'
-import { collection } from 'firebase/firestore'
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+} from 'firebase/firestore'
 
 export default {
   name: 'TodoList',
 
-  created() {
-    const citiesRef = collection(firbase, 'todo')
+  data() {
+    return {
+      todo_list: [],
+    }
+  },
 
-    console.log(citiesRef)
+  methods: {
+    async loadTodoList() {
+      const db = getFirestore(firbase)
+      const citiesRef = collection(db, 'todo')
+      const q = query(citiesRef, where('completed', '==', false))
+      const querySnapshot = await getDocs(q)
+
+      const todo_list = []
+      querySnapshot.forEach((doc) => {
+        todo_list.push({
+          id: doc.id,
+          data: doc.data(),
+        })
+      })
+
+      this.todo_list = todo_list
+    },
+  },
+
+  created() {
+    this.loadTodoList()
   },
 }
 </script>
