@@ -69,6 +69,8 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  setPersistence,
+  inMemoryPersistence,
 } from 'firebase/auth'
 
 export default {
@@ -103,13 +105,10 @@ export default {
     },
 
     register() {
+      this.error = ''
       const auth = getAuth()
       createUserWithEmailAndPassword(auth, this.email, this.password)
-        .then((userCredential) => {
-          // Signed in
-          const user = userCredential.user
-          console.log(user)
-        })
+        .then(() => {})
         .catch((error) => {
           const errorCode = error.code
           const errorMessage = error.message
@@ -119,24 +118,36 @@ export default {
     },
 
     login() {
+      this.error = ''
+
       const auth = getAuth()
-      signInWithEmailAndPassword(auth, this.email, this.password)
+      setPersistence(auth, inMemoryPersistence)
         .then(() => {
-          // Signed in
-          this.$router.push({ name: 'Home' })
+          return signInWithEmailAndPassword(auth, this.email, this.password)
+            .then(() => {
+              // Signed in
+              localStorage.setItem('user', auth.currentUser.uid)
+              this.$router.push({ name: 'Home' })
+            })
+            .catch((error) => {
+              const errorCode = error.code
+              const errorMessage = error.message
+              console.log(errorCode, errorMessage)
+              this.error = errorCode
+            })
         })
         .catch((error) => {
+          // Handle Errors here.
           const errorCode = error.code
           const errorMessage = error.message
           console.log(errorCode, errorMessage)
-          this.error = errorCode
         })
     },
   },
 
   created() {
-    const auth = getAuth()
-    if (auth.currentUser) {
+    let session_id = localStorage.getItem('user')
+    if (session_id){
       this.$router.push({ name: 'Home' })
     }
   },
