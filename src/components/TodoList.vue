@@ -1,92 +1,97 @@
 <template>
   <div class="min-h-screen w-full flex justify-center font-sans bg-grey">
-    <div class="bg-white rounded shadow-md p-6 m-4 w-full lg:w-2/4">
-      <div class="mb-4">
-        <p class="text-xl text-right text-red-600 link-logout" @click="logout">
-          Logout
-        </p>
-        <h1 class="mb-8 text-3xl text-center">Todo List</h1>
-
-        <div class="flex mt-4">
-          <input
-            class="
-              shadow
-              appearance-none
-              border
-              rounded
-              w-full
-              py-2
-              px-3
-              mr-4
-              text-grey-darker
-            "
-            v-model="title"
-            placeholder="Add Todo"
-          />
-
-          <button
-            class="
-              flex-no-shrink
-              p-2
-              border-2
-              rounded
-              text-green-500
-              border-green-500
-              hover:text-white hover:bg-green-500
-            "
-            @click="addTodo"
+    <div class=" w-full lg:w-2/4">
+      <div class="bg-white rounded shadow-md p-6 m-4">
+        <div class="mb-4">
+          <p
+            class="text-xl text-right text-red-600 link-logout"
+            @click="logout"
           >
-            Add
-          </button>
+            Logout
+          </p>
+          <h1 class="mb-8 text-3xl text-center">Todo List</h1>
+
+          <div class="flex mt-4">
+            <input
+              class="
+                shadow
+                appearance-none
+                border
+                rounded
+                w-full
+                py-2
+                px-3
+                mr-4
+                text-grey-darker
+              "
+              v-model="title"
+              placeholder="Add Todo"
+            />
+
+            <button
+              class="
+                flex-no-shrink
+                p-2
+                border-2
+                rounded
+                text-green-500
+                border-green-500
+                hover:text-white hover:bg-green-500
+              "
+              @click="addTodo"
+            >
+              Add
+            </button>
+          </div>
         </div>
       </div>
 
-      <hr class="mb-5" />
+      <div class="bg-white rounded shadow-md p-6 m-4">
+        <div v-for="row in todo_list" :key="row.id">
+          <div class="flex mb-4 items-center">
+            <p class="w-full text-grey-darkest">
+              {{ row.data.title }}
+            </p>
 
-      <div v-for="row in todo_list" :key="row.id">
-        <div class="flex mb-4 items-center">
-          <p class="w-full text-grey-darkest">
-            {{ row.data.title }}
-          </p>
+            <button
+              class="
+                flex-no-shrink
+                p-2
+                ml-4
+                mr-2
+                border-2
+                rounded
+                hover:text-white
+                text-green-500
+                border-green-500
+                hover:bg-green-500
+              "
+              @click="
+                updateTodoStatus(row.id, row.data.completed)
+                row.data.completed = !row.data.completed
+              "
+            >
+              {{ row.data.completed ? 'Not Done' : 'Done' }}
+            </button>
 
-          <button
-            class="
-              flex-no-shrink
-              p-2
-              ml-4
-              mr-2
-              border-2
-              rounded
-              hover:text-white
-              text-green-500
-              border-green-500
-              hover:bg-green-500
-            "
-            @click="
-              updateTodoStatus(row.id, row.data.completed)
-              row.data.completed = !row.data.completed
-            "
-          >
-            {{ row.data.completed ? 'Not Done' : 'Done' }}
-          </button>
-
-          <button
-            class="
-              flex-no-shrink
-              p-2
-              ml-2
-              border-2
-              rounded
-              text-red-500
-              border-red-500
-              hover:text-white hover:bg-red-500
-            "
-            @click="deleteTodo(row.id)"
-          >
-            Remove
-          </button>
+            <button
+              class="
+                flex-no-shrink
+                p-2
+                ml-2
+                border-2
+                rounded
+                text-red-500
+                border-red-500
+                hover:text-white hover:bg-red-500
+              "
+              @click="deleteTodo(row.id)"
+            >
+              Remove
+            </button>
+          </div>
+          <hr class="mb-4" />
         </div>
-        <hr class="mb-4" />
       </div>
     </div>
   </div>
@@ -174,7 +179,7 @@ export default {
     },
 
     logout() {
-      localStorage.setItem('user', null)
+      localStorage.setItem('user', '')
       this.$router.push({ name: 'Auth' })
     },
   },

@@ -97,7 +97,7 @@ export default {
   methods: {
     on_submit() {
       if (!this.email || !this.password) {
-        alert('Please Give Email and Password')
+        alert('Please Give Email and Password.')
         return
       }
       if (this.registration) this.register()
