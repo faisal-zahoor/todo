@@ -54,6 +54,7 @@
               border-green-500
               hover:bg-green-500
             "
+            v-if="!row.data.completed"
           >
             Done
           </button>
@@ -68,6 +69,7 @@
               border-red-500
               hover:text-white hover:bg-red-500
             "
+            @click="deleteTodo(row.id)"
           >
             Remove
           </button>
@@ -86,6 +88,8 @@ import {
   query,
   where,
   getDocs,
+  deleteDoc,
+  doc,
 } from 'firebase/firestore'
 
 export default {
@@ -113,6 +117,12 @@ export default {
       })
 
       this.todo_list = todo_list
+    },
+
+    async deleteTodo(id) {
+      const db = getFirestore(firbase)
+      await deleteDoc(doc(db, 'todo', id))
+      this.todo_list = this.todo_list.filter((row) => row.id != id)
     },
   },
 
