@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen w-full flex justify-center font-sans bg-grey">
-    <div class=" w-full lg:w-2/4">
+    <div class="w-full lg:w-2/4">
       <div class="bg-white rounded shadow-md p-6 m-4">
         <div class="mb-4">
           <p
@@ -46,7 +46,7 @@
         </div>
       </div>
 
-      <div class="bg-white rounded shadow-md p-6 m-4">
+      <div class="bg-white rounded shadow-md p-6 m-4 overflow-y-auto" style="max-height: 50vh;">
         <div v-for="row in todo_list" :key="row.id">
           <div class="flex mb-4 items-center">
             <p class="w-full text-grey-darkest">
@@ -66,6 +66,7 @@
                 border-green-500
                 hover:bg-green-500
               "
+              style="min-width: max-content;"
               @click="
                 updateTodoStatus(row.id, row.data.completed)
                 row.data.completed = !row.data.completed
