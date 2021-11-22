@@ -9,8 +9,8 @@ export default new Vuex.Store({
   },
   mutations: {
     SET_LOADING(state, val) {
-      state.loading = val
-    }
+      state.loading = val;
+    },
   },
   actions: {},
   modules: {},

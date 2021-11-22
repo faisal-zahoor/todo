@@ -68,11 +68,11 @@
               "
               style="min-width: max-content"
               @click="
-                updateTodoStatus(row.id, row.data.completed)
-                row.data.completed = !row.data.completed
+                updateTodoStatus(row.id, row.data.completed);
+                row.data.completed = !row.data.completed;
               "
             >
-              {{ row.data.completed ? 'Not Done' : 'Done' }}
+              {{ row.data.completed ? "Not Done" : "Done" }}
             </button>
 
             <button
@@ -99,7 +99,7 @@
 </template>
 
 <script>
-import firbase from '../firebase'
+import firbase from "../firebase";
 import {
   getFirestore,
   collection,
@@ -110,60 +110,60 @@ import {
   doc,
   setDoc,
   updateDoc,
-} from 'firebase/firestore'
+} from "firebase/firestore";
 
 export default {
-  name: 'TodoList',
+  name: "TodoList",
 
   data() {
     return {
-      title: '',
+      title: "",
       todo_list: [],
-      user: localStorage.getItem('user'),
-    }
+      user: localStorage.getItem("user"),
+    };
   },
 
   methods: {
     async loadTodoList() {
-      this.$store.commit('SET_LOADING', true)
-      const db = getFirestore(firbase)
-      const citiesRef = collection(db, 'todo')
-      const q = query(citiesRef, where('user', '==', this.user))
-      const querySnapshot = await getDocs(q)
+      this.$store.commit("SET_LOADING", true);
+      const db = getFirestore(firbase);
+      const citiesRef = collection(db, "todo");
+      const q = query(citiesRef, where("user", "==", this.user));
+      const querySnapshot = await getDocs(q);
 
-      const todo_list = []
+      const todo_list = [];
       querySnapshot.forEach((doc) => {
         todo_list.push({
           id: doc.id,
           data: doc.data(),
-        })
-      })
+        });
+      });
 
-      this.todo_list = todo_list
+      this.todo_list = todo_list;
 
-      this.$store.commit('SET_LOADING', false)
+      this.$store.commit("SET_LOADING", false);
     },
 
     async deleteTodo(id) {
-      this.$store.commit('SET_LOADING', true)
-      const db = getFirestore(firbase)
-      await deleteDoc(doc(db, 'todo', id))
-      this.todo_list = this.todo_list.filter((row) => row.id != id)
-      this.$store.commit('SET_LOADING', false)
+      this.$store.commit("SET_LOADING", true);
+      const db = getFirestore(firbase);
+      await deleteDoc(doc(db, "todo", id));
+      this.todo_list = this.todo_list.filter((row) => row.id != id);
+      this.$store.commit("SET_LOADING", false);
     },
 
     async addTodo() {
-      this.$store.commit('SET_LOADING', true)
+      this.$store.commit("SET_LOADING", true);
 
-      const random_hash = (Math.random() + 1).toString(36).substring(7)
-      const db = getFirestore(firbase)
+      const random_hash = (Math.random() + 1).toString(36).substring(7);
+      const db = getFirestore(firbase);
       const todo = {
         title: this.title,
         completed: false,
         user: this.user,
-      }
+      };
 
-      await setDoc(doc(db, 'todo', random_hash), todo)
+      await setDoc(doc(db, "todo", random_hash), todo);
 
       this.todo_list.unshift({
         id: random_hash,
@@ -172,38 +172,38 @@ export default {
           completed: false,
           user: this.user,
         },
-      })
+      });
 
-      this.title = ''
+      this.title = "";
 
-      this.$store.commit('SET_LOADING', false)
+      this.$store.commit("SET_LOADING", false);
     },
 
     async updateTodoStatus(id, status) {
-      this.$store.commit('SET_LOADING', true)
+      this.$store.commit("SET_LOADING", true);
 
-      const db = getFirestore(firbase)
-      const docRef = doc(db, 'todo', id)
+      const db = getFirestore(firbase);
+      const docRef = doc(db, "todo", id);
 
       await updateDoc(docRef, {
         completed: !status,
-      })
+      });
 
-      this.$store.commit('SET_LOADING', false)
+      this.$store.commit("SET_LOADING", false);
     },
 
     logout() {
-      this.$store.commit('SET_LOADING', true)
-      localStorage.setItem('user', '')
-      this.$router.push({ name: 'Auth' })
-      this.$store.commit('SET_LOADING', false)
+      this.$store.commit("SET_LOADING", true);
+      localStorage.setItem("user", "");
+      this.$router.push({ name: "Auth" });
+      this.$store.commit("SET_LOADING", false);
     },
   },
 
   created() {
-    this.loadTodoList()
+    this.loadTodoList();
   },
-}
+};
 </script>
 
 <style>

@@ -1,6 +1,5 @@
 <template>
   <div class="auth">
-    <!-- component -->
     <div class="bg-grey min-h-screen flex flex-col">
       <div
         class="
@@ -71,7 +70,7 @@ import {
   signInWithEmailAndPassword,
   setPersistence,
   inMemoryPersistence,
-} from 'firebase/auth'
+} from "firebase/auth";
 
 export default {
   data() {
@@ -79,79 +78,79 @@ export default {
       registration: false,
       email: null,
       password: null,
-      error: '',
-    }
+      error: "",
+    };
   },
 
   computed: {
     auth_label() {
-      return this.registration ? 'Sign Up' : 'Log In'
+      return this.registration ? "Sign Up" : "Log In";
     },
     other_action() {
-      if (this.registration) return 'Already have an account? Log in.'
+      if (this.registration) return "Already have an account? Log in.";
 
-      return "Don't have an account? Create Now."
+      return "Don't have an account? Create Now.";
     },
   },
 
   methods: {
     on_submit() {
       if (!this.email || !this.password) {
-        alert('Please Give Email and Password.')
-        return
+        alert("Please Give Email and Password.");
+        return;
       }
-      if (this.registration) this.register()
-      else this.login()
+      if (this.registration) this.register();
+      else this.login();
     },
 
     register() {
-      this.error = ''
-      const auth = getAuth()
+      this.error = "";
+      const auth = getAuth();
       createUserWithEmailAndPassword(auth, this.email, this.password)
         .then(() => {})
         .catch((error) => {
-          const errorCode = error.code
-          const errorMessage = error.message
-          console.log(errorCode, errorMessage)
-          this.error = errorCode
-        })
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorCode, errorMessage);
+          this.error = errorCode;
+        });
     },
 
     login() {
-      this.error = ''
+      this.error = "";
 
-      const auth = getAuth()
+      const auth = getAuth();
       setPersistence(auth, inMemoryPersistence)
         .then(() => {
           return signInWithEmailAndPassword(auth, this.email, this.password)
             .then(() => {
               // Signed in
-              localStorage.setItem('user', auth.currentUser.uid)
-              this.$router.push({ name: 'Home' })
+              localStorage.setItem("user", auth.currentUser.uid);
+              this.$router.push({ name: "Home" });
             })
             .catch((error) => {
-              const errorCode = error.code
-              const errorMessage = error.message
-              console.log(errorCode, errorMessage)
-              this.error = errorCode
-            })
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              console.log(errorCode, errorMessage);
+              this.error = errorCode;
+            });
         })
         .catch((error) => {
           // Handle Errors here.
-          const errorCode = error.code
-          const errorMessage = error.message
-          console.log(errorCode, errorMessage)
-        })
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorCode, errorMessage);
+        });
     },
   },
 
   created() {
-    let session_id = localStorage.getItem('user')
-    if (session_id){
-      this.$router.push({ name: 'Home' })
+    let session_id = localStorage.getItem("user");
+    if (session_id) {
+      this.$router.push({ name: "Home" });
     }
   },
-}
+};
 </script>
 
 <style>
