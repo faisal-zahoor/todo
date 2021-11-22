@@ -2,7 +2,9 @@
   <div class="min-h-screen w-full flex justify-center font-sans bg-grey">
     <div class="bg-white rounded shadow-md p-6 m-4 w-full lg:w-2/4">
       <div class="mb-4">
-        <p class="d-inline-block ml-auto text-xl text-right text-red-600">Logout</p>
+        <p class="text-xl text-right text-red-600 link-logout" @click="logout">
+          Logout
+        </p>
         <h1 class="mb-8 text-3xl text-center">Todo List</h1>
 
         <div class="flex mt-4">
@@ -170,6 +172,11 @@ export default {
         completed: !status,
       })
     },
+
+    logout() {
+      localStorage.setItem('user', null)
+      this.$router.push({ name: 'Auth' })
+    },
   },
 
   created() {
@@ -178,4 +185,9 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+.link-logout {
+  text-decoration: underline;
+  cursor: pointer;
+}
+</style>
