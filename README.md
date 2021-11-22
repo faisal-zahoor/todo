@@ -1,4 +1,4 @@
-# Todo application in Vue.js, Tailwind Css and Firebase
+# Todo application in Vue.js, Tailwind CSS and Firebase
 
 ## Project setup
 
