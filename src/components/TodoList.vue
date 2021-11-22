@@ -46,10 +46,7 @@
         </div>
       </div>
 
-      <div
-        class="bg-white rounded shadow-md p-6 m-4 overflow-y-auto"
-        style="max-height: 70vh"
-      >
+      <div class="bg-white p-6 m-4 overflow-y-auto" style="max-height: 70vh">
         <div v-for="row in todo_list" :key="row.id">
           <div class="flex mb-4 items-center">
             <p class="w-full text-grey-darkest">
@@ -128,6 +125,7 @@ export default {
 
   methods: {
     async loadTodoList() {
+      this.$store.commit('SET_LOADING', true)
       const db = getFirestore(firbase)
       const citiesRef = collection(db, 'todo')
       const q = query(citiesRef, where('user', '==', this.user))
@@ -142,15 +140,21 @@ export default {
       })
 
       this.todo_list = todo_list
+
+      this.$store.commit('SET_LOADING', false)
     },
 
     async deleteTodo(id) {
+      this.$store.commit('SET_LOADING', true)
       const db = getFirestore(firbase)
       await deleteDoc(doc(db, 'todo', id))
       this.todo_list = this.todo_list.filter((row) => row.id != id)
+      this.$store.commit('SET_LOADING', false)
     },
 
     async addTodo() {
+      this.$store.commit('SET_LOADING', true)
+
       const random_hash = (Math.random() + 1).toString(36).substring(7)
       const db = getFirestore(firbase)
       const todo = {
@@ -171,20 +175,28 @@ export default {
       })
 
       this.title = ''
+
+      this.$store.commit('SET_LOADING', false)
     },
 
     async updateTodoStatus(id, status) {
+      this.$store.commit('SET_LOADING', true)
+
       const db = getFirestore(firbase)
       const docRef = doc(db, 'todo', id)
 
       await updateDoc(docRef, {
         completed: !status,
       })
+
+      this.$store.commit('SET_LOADING', false)
     },
 
     logout() {
+      this.$store.commit('SET_LOADING', true)
       localStorage.setItem('user', '')
       this.$router.push({ name: 'Auth' })
+      this.$store.commit('SET_LOADING', false)
     },
   },
 
